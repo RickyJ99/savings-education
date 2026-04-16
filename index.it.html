@@ -573,29 +573,33 @@ function maxDrawdown(vals) {
   return maxDD * 100;
 }
 
-// Recovery time in months: from trough back to previous peak
+// Mesi di recupero: dal minimo del peggior drawdown al picco precedente
 function recoveryMonths(vals) {
-  let peak = vals[0], peakI = 0, troughI = 0, trough = vals[0];
-  for (let i = 1; i < vals.length; i++) {
-    if (vals[i] > peak) { peak = vals[i]; peakI = i; }
-    if (vals[i] < trough) { trough = vals[i]; troughI = i; }
-  }
   let runPeak = vals[0];
-  let realPeakI = 0, realTroughI = 0, realTrough = vals[0];
+  let worstDD = 0;
+  let worstPeakVal = vals[0]; // snapshot del runPeak al momento del peggior drawdown
+  let worstTroughI = 0;
+
   for (let i = 1; i < vals.length; i++) {
-    if (vals[i] > runPeak) { runPeak = vals[i]; realPeakI = i; }
-    else {
+    if (vals[i] > runPeak) {
+      runPeak = vals[i];
+    } else {
       const dd = (vals[i] - runPeak) / runPeak;
-      if (dd < (realTrough - runPeak) / runPeak) {
-        realTrough = vals[i]; realTroughI = i;
+      if (dd < worstDD) {
+        worstDD = dd;
+        worstPeakVal = runPeak; // cattura il picco pre-drawdown corretto
+        worstTroughI = i;
       }
     }
   }
-  const peakVal = vals[realPeakI];
-  for (let i = realTroughI; i < vals.length; i++) {
-    if (vals[i] >= peakVal) return i - realTroughI;
+
+  if (worstDD === 0) return 0; // nessun drawdown
+
+  // primo mese dopo il minimo in cui il portafoglio torna a worstPeakVal
+  for (let i = worstTroughI; i < vals.length; i++) {
+    if (vals[i] >= worstPeakVal) return i - worstTroughI;
   }
-  return null; // non ancora recuperato nei dati
+  return null; // non ancora recuperato nella finestra dati
 }
 
 // ── Monthly contribution "invested" values ────────────────────────────────
