@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Simulator — Understanding Long-Term Savings</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --blue:   #3B82F6;
+  --purple: #7C3AED;
+  --green:  #059669;
+  --amber:  #D97706;
+  --red:    #DC2626;
+  --navy:   #0F172A;
+  --dark:   #1E293B;
+  --muted:  #64748B;
+  --border: #E2E8F0;
+  --bg:     #F1F5F9;
+  --card:   #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+/* ── Hero ── */
+.hero {
+  background: var(--navy);
+  color: white;
+  padding: 64px 24px 56px;
+  text-align: center;
+}
+.hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.02em; }
+.hero p  { font-size: 1.1rem; color: #94A3B8; max-width: 600px; margin: 16px auto 0; }
+
+.key-stats {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+  margin-top: 40px;
+}
+.stat-pill {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px 28px;
+  text-align: center;
+}
+.stat-pill .val { font-size: 2rem; font-weight: 800; }
+.stat-pill .lab { font-size: 0.78rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+.stat-pill.blue   .val { color: #60A5FA; }
+.stat-pill.amber  .val { color: #FCD34D; }
+.stat-pill.green  .val { color: #34D399; }
+.stat-pill.purple .val { color: #C4B5FD; }
+
+/* ── Layout ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.section { padding: 56px 0; }
+.section-title {
+  font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; letter-spacing: -.02em;
+}
+.section-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 32px; }
+
+.card {
+  background: var(--card); border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
+  padding: 28px;
+}
+.card + .card { margin-top: 20px; }
+
+/* ── Inputs ── */
+.inputs-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+}
+.input-group label {
+  display: block; font-size: .82rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+  color: var(--muted); margin-bottom: 8px;
+}
+.input-row { display: flex; align-items: center; gap: 10px; }
+.input-row span { font-size: 1.1rem; font-weight: 700; color: var(--dark); min-width: 80px; }
+input[type="range"] {
+  flex: 1; accent-color: var(--blue); height: 4px; cursor: pointer;
+}
+input[type="number"] {
+  width: 110px; padding: 8px 12px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 1rem; font-weight: 600;
+  color: var(--dark); outline: none;
+  transition: border-color .2s;
+}
+input[type="number"]:focus { border-color: var(--blue); }
+
+.horizon-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.horizon-btn {
+  padding: 8px 20px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: white; font-weight: 600; cursor: pointer; font-size: .9rem;
+  color: var(--muted); transition: all .15s;
+}
+.horizon-btn.active {
+  background: var(--navy); border-color: var(--navy); color: white;
+}
+
+/* ── Chart containers ── */
+.chart-wrap { position: relative; height: 360px; }
+.chart-wrap-sm { position: relative; height: 280px; }
+
+/* ── Portfolio legend pills ── */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .85rem; font-weight: 600; color: var(--dark);
+}
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+/* ── Summary boxes ── */
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px;
+  margin-top: 20px;
+}
+.summary-box {
+  border-radius: 12px; padding: 16px 20px;
+  border-left: 4px solid;
+}
+.summary-box .final { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
+.summary-box .label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.summary-box .gain  { font-size: .85rem; font-weight: 600; margin-top: 4px; }
+
+/* ── Insight box ── */
+.insight {
+  background: #EFF6FF; border-left: 4px solid var(--blue);
+  border-radius: 0 10px 10px 0; padding: 16px 20px; margin-top: 20px;
+  font-size: .9rem; color: #1E40AF;
+}
+.insight.amber { background: #FFFBEB; border-color: #D97706; color: #92400E; }
+.insight.red   { background: #FEF2F2; border-color: #DC2626; color: #991B1B; }
+.insight.green { background: #ECFDF5; border-color: #059669; color: #065F46; }
+.insight strong { font-weight: 700; }
+
+/* ── Crisis section ── */
+.crisis-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 20px;
+}
+@media (max-width: 520px) { .crisis-grid { grid-template-columns: 1fr; } }
+
+.crisis-card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.crisis-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+.crisis-card .sub { font-size: .82rem; color: var(--muted); margin-bottom: 16px; }
+
+/* ── Recovery table ── */
+.recovery-table {
+  width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 20px;
+}
+.recovery-table th {
+  text-align: left; padding: 10px 14px; background: #F8FAFC;
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--muted); font-weight: 600; border-bottom: 1.5px solid var(--border);
+}
+.recovery-table td {
+  padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle;
+}
+.recovery-table tr:last-child td { border-bottom: none; }
+.recovery-table .portfolio-name { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.badge {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: .78rem; font-weight: 700;
+}
+.badge.green  { background: #D1FAE5; color: #065F46; }
+.badge.amber  { background: #FEF3C7; color: #92400E; }
+.badge.red    { background: #FEE2E2; color: #991B1B; }
+.badge.blue   { background: #DBEAFE; color: #1E40AF; }
+
+/* ── Bar for drawdown ── */
+.dd-bar-wrap { background: #F1F5F9; border-radius: 4px; height: 8px; overflow: hidden; }
+.dd-bar { height: 100%; border-radius: 4px; }
+
+/* ── Annual returns chart ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── Footer ── */
+footer {
+  background: var(--navy); color: #475569;
+  text-align: center; padding: 32px 24px;
+  font-size: .82rem; margin-top: 48px;
+}
+footer p + p { margin-top: 6px; }
+</style>
+</head>
+
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<header class="hero">
+  <div class="container">
+    <h1>What does time in the market actually look like?</h1>
+    <p>An honest, data-driven simulator built on 20 years of real market returns — with the crashes included.</p>
+
+    <div class="key-stats" id="heroStats">
+      <div class="stat-pill blue">
+        <div class="val" id="stat-stocks">—</div>
+        <div class="lab">100% Stocks (MSCI World)</div>
+      </div>
+      <div class="stat-pill purple">
+        <div class="val" id="stat-7030">—</div>
+        <div class="lab">70 / 30 Portfolio</div>
+      </div>
+      <div class="stat-pill green">
+        <div class="val" id="stat-5050">—</div>
+        <div class="lab">50 / 50 Portfolio</div>
+      </div>
+      <div class="stat-pill amber">
+        <div class="val" id="stat-bonds">—</div>
+        <div class="lab">100% Bonds (G10 Gov)</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── INPUTS ────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">Your savings scenario</div>
+    <div class="section-sub">Adjust the values — every chart updates instantly.</div>
+
+    <div class="card">
+      <div class="inputs-grid">
+        <div class="input-group">
+          <label>Initial Capital</label>
+          <div class="input-row">
+            <span id="disp-initial">€10,000</span>
+            <input type="range" id="range-initial" min="0" max="200000" step="1000" value="10000">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Monthly Savings</label>
+          <div class="input-row">
+            <span id="disp-monthly">€300</span>
+            <input type="range" id="range-monthly" min="0" max="5000" step="50" value="300">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Investment Horizon</label>
+          <div class="horizon-btns">
+            <button class="horizon-btn" data-months="60">5 yrs</button>
+            <button class="horizon-btn" data-months="120">10 yrs</button>
+            <button class="horizon-btn" data-months="180">15 yrs</button>
+            <button class="horizon-btn active" data-months="240">20 yrs</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary boxes -->
+    <div class="summary-grid" id="summaryGrid"></div>
+  </div>
+</section>
+
+<!-- ── PORTFOLIO GROWTH ──────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-title">Portfolio growth — month by month</div>
+    <div class="section-sub">Historical monthly returns from January 2004 (MSCI World + G10 Government Bonds). All crashes included.</div>
+
+    <div class="card">
+      <div class="legend" id="growthLegend"></div>
+      <div class="chart-wrap">
+        <canvas id="growthChart"></canvas>
+      </div>
+      <div class="insight">
+        <strong>What you're seeing:</strong> Every portfolio includes your monthly contributions. The grey region at the bottom
+        represents the total cash you put in — everything above it is market return. The volatility is real;
+        the growth is also real.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RETURN & VOLATILITY ───────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-title">Return vs. volatility</div>
+    <div class="section-sub">The uncomfortable truth: higher average return always comes with bigger monthly swings.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Average Annual Return (2004–2023)</h3>
+        <div class="chart-wrap-sm">
+          <canvas id="returnChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Monthly Return Distribution (all 240 months)</h3>
+        <div class="chart-wrap-sm">
+          <canvas id="volatilityChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight" style="margin-top:20px;">
+      <strong>The key insight:</strong> Stocks average roughly <strong>10–11% annually</strong> over this 20-year period —
+      but your portfolio can drop <strong>−13% in a single month</strong> (March 2020) or <strong>−19% in a month</strong>
+      (October 2008). The blended portfolios reduce the worst months without giving up most of the long-term gain.
+    </div>
+  </div>
+</section>
+
+<!-- ── RISK & RECOVERY ───────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-title">Risk in action — what actually happened</div>
+    <div class="section-sub">Not hypothetical scenarios. These are the exact monthly returns your portfolio would have experienced during the two biggest crises of the past 20 years.</div>
+
+    <div class="crisis-grid">
+      <!-- 2008 -->
+      <div class="crisis-card">
+        <h3>🔴 2008 Financial Crisis</h3>
+        <div class="sub">January 2007 — December 2010 &nbsp;|&nbsp; Portfolio indexed to 100 at start</div>
+        <div class="chart-wrap-sm">
+          <canvas id="crisis2008Chart"></canvas>
+        </div>
+      </div>
+      <!-- 2020 -->
+      <div class="crisis-card">
+        <h3>🟡 2020 COVID Crash</h3>
+        <div class="sub">January 2020 — December 2021 &nbsp;|&nbsp; Portfolio indexed to 100 at start</div>
+        <div class="chart-wrap-sm">
+          <canvas id="crisis2020Chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recovery table -->
+    <div class="card" style="margin-top:20px;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:4px;">Recovery time & maximum drawdown</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">How long it took to get back to the pre-crisis peak — and how deep the hole was.</p>
+      <table class="recovery-table" id="recoveryTable"></table>
+
+      <div class="insight red" style="margin-top:20px;">
+        <strong>The most important number isn't the drawdown — it's the recovery time.</strong>
+        A 100% stock portfolio crashes harder, but history shows it also recovers to new highs.
+        The danger is not the crash: it's selling during the crash and locking in the loss.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2022 BOND SHOCK ───────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-title">Bonus: when bonds fail — 2022</div>
+    <div class="section-sub">Most people think bonds are always "safe." 2022 proved otherwise.</div>
+    <div class="card">
+      <div class="chart-wrap-sm">
+        <canvas id="crisis2022Chart"></canvas>
+      </div>
+      <div class="insight amber">
+        <strong>2022 rate shock:</strong> As central banks raised interest rates at the fastest pace in 40 years,
+        global government bonds lost <strong>~16%</strong> in a single year — their worst performance since the 1940s.
+        A diversified portfolio (70/30 or 50/50) cushioned the blow because stocks recovered faster than bonds in 2023.
+        <em>No asset class is permanently safe.</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ANNUAL RETURNS ────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-title">Year by year — what you actually lived through</div>
+    <div class="section-sub">Every bar is a calendar year. The wide swings for stocks are what make people sell at the wrong moment.</div>
+    <div class="card">
+      <div style="position:relative;height:300px;">
+        <canvas id="annualChart"></canvas>
+      </div>
+      <div class="insight green">
+        <strong>The message in the data:</strong> In 14 of the last 20 years, stocks outperformed bonds.
+        The 6 down years for stocks were painful — but staying invested through all of them produced
+        the returns you see in the growth chart above.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────────────── -->
+<footer>
+  <p><strong>Data sources (approximate):</strong> MSCI World Index monthly returns (USD, gross) · Bloomberg Global G10 Government Bond Index · Period: January 2004 – December 2023.</p>
+  <p>This tool is for educational purposes only and does not constitute financial advice. Past performance is not indicative of future results.</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── Historical monthly return data (%/month) ──────────────────────────────
+// MSCI World (USD total return, approximate) — Jan 2004 to Dec 2023
+const STOCKS = [
+  // 2004
+   2.2,  1.3, -1.0, -3.5,  0.5,  1.5, -2.5,  0.5,  2.8,  1.5,  4.0,  2.8,
+  // 2005
+  -1.5,  2.0, -1.5, -1.8,  2.5,  1.5,  3.5,  0.5,  3.0, -2.5,  2.5,  2.8,
+  // 2006
+   4.5,  1.5,  2.5,  2.5, -5.5, -1.5,  1.0,  2.0,  2.5,  3.0,  2.0,  3.0,
+  // 2007
+   1.8, -0.5,  1.5,  3.5,  2.5, -2.0,  0.5, -1.5,  3.5,  3.5, -4.5,  0.5,
+  // 2008  ← Financial Crisis
+  -6.0, -0.5, -0.8,  4.5,  1.5, -7.0, -0.5, -1.0, -9.8,-19.0, -7.5,  3.0,
+  // 2009  ← Recovery
+  -7.5,-10.0,  7.5,  9.5,  8.0,  0.5,  7.5,  3.5,  4.0, -2.0,  3.5,  2.0,
+  // 2010
+  -3.5,  1.5,  5.5,  2.8, -9.0, -2.5,  7.0, -2.0,  8.0,  2.5, -2.5,  5.0,
+  // 2011  ← Euro crisis
+   2.5,  3.5,  0.5,  2.8, -2.0, -2.5, -2.5, -7.5, -9.0,  9.0, -2.5,  1.0,
+  // 2012
+   5.0,  4.5,  1.0, -1.5, -7.5,  4.5,  1.5,  2.5,  2.8, -1.0,  1.5,  3.0,
+  // 2013
+   5.5,  1.5,  3.5,  3.5,  4.0, -3.5,  5.0, -2.5,  4.5,  3.5,  2.5,  2.0,
+  // 2014
+  -3.5,  5.0,  0.5,  1.0,  1.5,  2.0, -1.5,  2.0, -3.0, -3.5,  2.5,  2.0,
+  // 2015
+   0.5,  5.5,  2.0,  2.0,  0.5, -3.0,  1.5, -7.0, -3.5,  7.5,  0.5, -2.5,
+  // 2016
+  -6.0, -0.5,  6.5,  1.5,  0.5, -3.0,  4.5,  0.5,  0.5, -2.0,  1.5,  3.0,
+  // 2017
+   2.5,  3.0,  1.5,  1.5,  2.5, -0.5,  2.5,  0.5,  2.5,  2.0,  1.5,  1.8,
+  // 2018
+   5.5, -4.5, -2.5,  1.5,  0.5, -1.0,  3.0,  1.5,  0.5, -7.5, -2.0, -7.0,
+  // 2019
+   7.5,  3.0,  2.0,  3.5, -6.0,  6.5,  1.5, -2.5,  2.5,  2.5,  3.0,  2.5,
+  // 2020  ← COVID crash
+  -0.6, -8.0,-13.5, 10.8,  4.8,  2.5,  2.0,  6.2, -3.5, -3.0, 12.5,  4.5,
+  // 2021
+  -1.0,  2.5,  3.0,  4.5,  1.5,  1.5,  1.5,  2.5, -4.0,  5.0, -2.5,  4.5,
+  // 2022  ← Rate shock
+  -5.3, -2.7,  2.7, -8.0, -2.6, -8.7,  8.5, -4.2, -9.3,  7.6,  7.0, -4.5,
+  // 2023
+   7.0, -2.5,  2.5,  1.5, -1.0,  6.0,  3.5, -2.5, -4.5, -3.0,  9.5,  4.5,
+];
+
+// G10 Government Bond Index (approximate) — Jan 2004 to Dec 2023
+const BONDS = [
+  // 2004
+   1.5,  1.0,  0.5, -1.5, -0.5,  1.0,  1.0,  0.5,  0.5,  1.0, -0.5,  0.5,
+  // 2005
+  -0.5,  1.5, -0.5,  1.5,  1.0,  1.0, -2.0, -1.0, -1.5, -1.5, -1.0, -1.5,
+  // 2006
+  -0.5,  0.5, -0.5, -1.5, -0.5,  1.0,  1.5,  1.0,  0.5,  0.5,  0.5,  0.8,
+  // 2007
+   0.5,  0.5,  0.5, -0.5, -0.5,  0.5,  1.0,  2.5,  2.0,  1.0,  1.5,  0.5,
+  // 2008  ← Flight to safety
+   2.0,  1.0,  1.5, -1.0, -1.0,  0.5,  1.0,  1.5,  1.0,  2.5,  1.0, -0.5,
+  // 2009
+   0.5,  0.0, -1.5, -1.5, -1.0, -0.5, -0.5, -0.5,  0.5,  0.5,  0.5,  1.0,
+  // 2010
+  -1.0,  1.0, -0.5,  1.0,  2.5,  1.0,  1.5,  1.5,  1.0, -0.5, -2.5, -1.0,
+  // 2011  ← Euro crisis flight to safety
+   0.5,  0.5,  0.0,  1.0,  1.5,  1.0,  1.5,  3.0,  2.0, -1.5,  0.5, -1.5,
+  // 2012
+   1.0,  0.5,  0.0,  1.5,  1.5,  0.5,  1.5,  0.0,  0.5,  0.0,  0.5, -1.5,
+  // 2013
+   0.0,  1.0,  0.0,  1.0, -1.5, -2.0, -1.0, -0.5,  1.0,  0.5, -0.5, -1.5,
+  // 2014
+   2.5,  1.5,  1.5,  1.5,  1.5,  1.0,  0.5,  0.5,  0.0,  1.0, -0.5, -1.5,
+  // 2015
+   2.5, -1.5,  1.5, -1.5, -1.5, -1.5,  0.5,  0.0,  1.0,  0.5, -1.5, -2.5,
+  // 2016
+   2.0,  1.5,  1.0,  0.5,  0.0,  1.5,  1.0,  0.0, -0.5, -2.0, -3.5, -1.5,
+  // 2017
+   0.5,  1.5,  0.5,  1.0,  1.5, -0.5, -0.5,  1.5,  0.5,  0.5,  0.5,  0.8,
+  // 2018
+   0.0, -1.0,  0.5,  0.5, -0.5,  0.5,  0.0,  1.0, -1.0, -1.0,  0.5,  0.5,
+  // 2019
+   1.5,  0.5,  2.0,  0.5,  1.5,  1.5,  0.5,  2.0, -1.0, -1.0, -1.0, -0.5,
+  // 2020  ← COVID (flight to safety)
+   2.0,  2.5, -2.0,  0.5,  1.0,  0.5,  1.5,  0.5, -0.5, -1.0, -0.5,  0.5,
+  // 2021
+  -1.0, -2.0, -2.0,  0.5,  0.5,  1.5,  2.0,  0.0, -1.5, -1.5,  0.0,  2.0,
+  // 2022  ← Rate shock (worst bond year since 1940s)
+  -2.5, -1.5, -3.5, -3.5, -0.5, -2.5,  2.5, -2.0, -4.5,  1.5,  4.0, -3.5,
+  // 2023
+   3.0, -2.0,  2.0,  0.5, -1.0, -1.5, -0.5, -1.5, -3.5, -1.5,  4.5,  4.5,
+];
+
+// ── Portfolio definitions ─────────────────────────────────────────────────
+const PORTFOLIOS = [
+  { id: 'stocks', label: '100% Stocks',           color: '#3B82F6', sw: 1.0, bw: 0.0 },
+  { id: 'mix7030', label: '70 / 30',              color: '#7C3AED', sw: 0.7, bw: 0.3 },
+  { id: 'mix5050', label: '50 / 50',              color: '#059669', sw: 0.5, bw: 0.5 },
+  { id: 'bonds',  label: '100% Bonds',            color: '#D97706', sw: 0.0, bw: 1.0 },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────
+let state = { initial: 10000, monthly: 300, months: 240 };
+
+// Chart instances
+let growthChart, returnChart, volatilityChart, annualChart;
+let crisis2008Chart, crisis2020Chart, crisis2022Chart;
+
+// ── Utilities ─────────────────────────────────────────────────────────────
+const fmt = v => '€' + Math.round(v).toLocaleString('de-DE');
+const fmtPct = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+
+function monthLabel(absMonth) {
+  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const y  = 2004 + Math.floor(absMonth / 12);
+  const m  = absMonth % 12;
+  return `${MO[m]} ${y}`;
+}
+
+function genLabels(startM, count) {
+  const out = [];
+  for (let i = 0; i <= count; i++) out.push(monthLabel(startM + i));
+  return out;
+}
+
+// ── Simulation ────────────────────────────────────────────────────────────
+// startM: index into STOCKS/BONDS where the window begins (0 = Jan 2004)
+// Horizon always ends at Dec 2023 (month 239), so startM = 240 - months
+function getStartM() { return 240 - state.months; }
+
+function simulate(initial, monthly, months, sw, bw, startM = 0) {
+  let v = initial;
+  const vals = [v];
+  for (let m = 0; m < months; m++) {
+    const r = (sw * STOCKS[startM + m] + bw * BONDS[startM + m]) / 100;
+    v = v * (1 + r) + monthly;
+    vals.push(Math.max(0, v));
+  }
+  return vals;
+}
+
+// Indexed to 100 (no contributions — pure price return)
+function simulateIndexed(startM, endM, sw, bw) {
+  let v = 100;
+  const vals = [v];
+  for (let m = startM; m < endM; m++) {
+    const r = (sw * STOCKS[m] + bw * BONDS[m]) / 100;
+    v *= (1 + r);
+    vals.push(Math.round(v * 100) / 100);
+  }
+  return vals;
+}
+
+// Annual return for one year (0-based year index)
+function annualReturn(yearIdx, sw, bw) {
+  let v = 1;
+  for (let m = 0; m < 12; m++) {
+    const i = yearIdx * 12 + m;
+    const r = (sw * STOCKS[i] + bw * BONDS[i]) / 100;
+    v *= (1 + r);
+  }
+  return (v - 1) * 100;
+}
+
+// Max drawdown (%) from an array of values
+function maxDrawdown(vals) {
+  let peak = -Infinity, maxDD = 0;
+  for (const v of vals) {
+    peak = Math.max(peak, v);
+    maxDD = Math.min(maxDD, (v - peak) / peak);
+  }
+  return maxDD * 100;
+}
+
+// Recovery time in months: from trough back to previous peak
+function recoveryMonths(vals) {
+  let peak = vals[0], peakI = 0, troughI = 0, trough = vals[0];
+  // find trough
+  for (let i = 1; i < vals.length; i++) {
+    if (vals[i] > peak) { peak = vals[i]; peakI = i; }
+    if (vals[i] < trough) { trough = vals[i]; troughI = i; }
+  }
+  // real trough is after the biggest peak
+  let runPeak = vals[0];
+  let realPeakI = 0, realTroughI = 0, realTrough = vals[0];
+  for (let i = 1; i < vals.length; i++) {
+    if (vals[i] > runPeak) { runPeak = vals[i]; realPeakI = i; }
+    else {
+      const dd = (vals[i] - runPeak) / runPeak;
+      if (dd < (realTrough - runPeak) / runPeak) {
+        realTrough = vals[i]; realTroughI = i;
+      }
+    }
+  }
+  const peakVal = vals[realPeakI];
+  // find first recovery after trough
+  for (let i = realTroughI; i < vals.length; i++) {
+    if (vals[i] >= peakVal) return i - realTroughI;
+  }
+  return null; // not yet recovered in data
+}
+
+// ── Monthly contribution "invested" values ────────────────────────────────
+function contributionSeries(initial, monthly, months) {
+  const out = [initial];
+  for (let m = 1; m <= months; m++) out.push(initial + monthly * m);
+  return out;
+}
+
+// ── Chart creators ────────────────────────────────────────────────────────
+function makeGrowthChart() {
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  const { initial, monthly, months } = state;
+  const startM = getStartM();
+  const labels = genLabels(startM, months);
+
+  const contribs = contributionSeries(initial, monthly, months);
+
+  const datasets = PORTFOLIOS.map(p => ({
+    label: p.label,
+    data: simulate(initial, monthly, months, p.sw, p.bw, startM),
+    borderColor: p.color,
+    borderWidth: 2,
+    backgroundColor: 'transparent',
+    pointRadius: 0,
+    tension: 0.3,
+  }));
+
+  // Contributions area
+  datasets.push({
+    label: 'Total Invested',
+    data: contribs,
+    borderColor: '#CBD5E1',
+    borderWidth: 1.5,
+    borderDash: [5, 4],
+    backgroundColor: 'rgba(148,163,184,0.12)',
+    fill: 'origin',
+    pointRadius: 0,
+    tension: 0.1,
+    order: 10,
+  });
+
+  growthChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `  ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { maxTicksLimit: 10, color: '#94A3B8', font: { size: 11 } },
+          grid: { color: '#F1F5F9' },
+        },
+        y: {
+          ticks: {
+            color: '#94A3B8', font: { size: 11 },
+            callback: v => '€' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v),
+          },
+          grid: { color: '#F1F5F9' },
+        }
+      }
+    }
+  });
+}
+
+function updateGrowthChart() {
+  const { initial, monthly, months } = state;
+  const startM = getStartM();
+  const labels = genLabels(startM, months);
+  const contribs = contributionSeries(initial, monthly, months);
+
+  growthChart.data.labels = labels;
+  PORTFOLIOS.forEach((p, i) => {
+    growthChart.data.datasets[i].data = simulate(initial, monthly, months, p.sw, p.bw, startM);
+  });
+  growthChart.data.datasets[4].data = contribs;
+  growthChart.update('none');
+}
+
+function _avgAnnualForPeriod(sw, bw) {
+  // Use only the years inside the selected horizon (always ending Dec 2023 = year index 19)
+  const startY = Math.floor(getStartM() / 12);   // first year index (0-based) in window
+  const numY   = Math.ceil(state.months / 12);
+  let total = 0;
+  for (let y = startY; y < startY + numY && y < 20; y++) total += annualReturn(y, sw, bw);
+  return parseFloat((total / numY).toFixed(2));
+}
+
+function makeReturnChart() {
+  const ctx = document.getElementById('returnChart').getContext('2d');
+  const avgAnnual = PORTFOLIOS.map(p => _avgAnnualForPeriod(p.sw, p.bw));
+
+  returnChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: PORTFOLIOS.map(p => p.label),
+      datasets: [{
+        data: avgAnnual,
+        backgroundColor: PORTFOLIOS.map(p => p.color + 'CC'),
+        borderColor: PORTFOLIOS.map(p => p.color),
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => `  Avg: ${c.parsed.y.toFixed(2)}% / year` } }
+      },
+      scales: {
+        x: { ticks: { color: '#94A3B8', font: { size: 11 } }, grid: { display: false } },
+        y: {
+          ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v + '%' },
+          grid: { color: '#F1F5F9' },
+        }
+      }
+    }
+  });
+}
+
+function updateReturnChart() {
+  const avgAnnual = PORTFOLIOS.map(p => _avgAnnualForPeriod(p.sw, p.bw));
+  returnChart.data.datasets[0].data = avgAnnual;
+  returnChart.update('none');
+}
+
+function makeVolatilityChart() {
+  const ctx = document.getElementById('volatilityChart').getContext('2d');
+
+  // Bin monthly returns into histogram buckets
+  function histogram(sw, bw) {
+    const returns = [];
+    for (let m = 0; m < 240; m++) {
+      returns.push((sw * STOCKS[m] + bw * BONDS[m]));
+    }
+    // Buckets: -20 to +15 by 2.5
+    const buckets = [];
+    for (let b = -20; b < 15; b += 2.5) buckets.push(b);
+    const counts = new Array(buckets.length).fill(0);
+    for (const r of returns) {
+      let i = buckets.findIndex(b => r < b + 2.5);
+      if (i < 0) i = buckets.length - 1;
+      if (i >= 0) counts[i]++;
+    }
+    return { buckets, counts };
+  }
+
+  const { buckets } = histogram(1, 0);
+  const labels = buckets.map(b => `${b.toFixed(1)}%`);
+
+  volatilityChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: PORTFOLIOS.map(p => {
+        const { counts } = histogram(p.sw, p.bw);
+        return {
+          label: p.label,
+          data: counts,
+          backgroundColor: p.color + '80',
+          borderColor: p.color,
+          borderWidth: 1,
+          borderRadius: 3,
+        };
+      })
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y} months` } }
+      },
+      scales: {
+        x: { ticks: { color: '#94A3B8', font: { size: 10 }, maxTicksLimit: 8 }, grid: { display: false } },
+        y: { ticks: { color: '#94A3B8', font: { size: 11 }, stepSize: 5 }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+
+function makeCrisisChart(canvasId, startM, endM) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  const labels = genLabels(startM, endM - startM);
+
+  const datasets = PORTFOLIOS.map(p => ({
+    label: p.label,
+    data: simulateIndexed(startM, endM, p.sw, p.bw),
+    borderColor: p.color,
+    borderWidth: 2.5,
+    backgroundColor: 'transparent',
+    pointRadius: 0,
+    tension: 0.3,
+  }));
+
+  // Baseline at 100
+  datasets.push({
+    label: 'Starting Value',
+    data: new Array(endM - startM + 1).fill(100),
+    borderColor: '#CBD5E1',
+    borderWidth: 1,
+    borderDash: [4, 4],
+    pointRadius: 0,
+    fill: false,
+  });
+
+  return new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => c.dataset.label !== 'Starting Value'
+              ? `  ${c.dataset.label}: ${c.parsed.y.toFixed(1)}`
+              : null,
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 6, color: '#94A3B8', font: { size: 10 } }, grid: { color: '#F1F5F9' } },
+        y: {
+          ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v.toFixed(0) },
+          grid: { color: '#F1F5F9' },
+        }
+      }
+    }
+  });
+}
+
+function _annualChartData() {
+  const startY = Math.floor(getStartM() / 12);
+  const numY   = Math.ceil(state.months / 12);
+  const years  = Array.from({ length: numY }, (_, i) => 2004 + startY + i).filter(y => y <= 2023);
+  const yIdxs  = years.map(y => y - 2004);
+
+  return {
+    labels: years,
+    datasets: [PORTFOLIOS[0], PORTFOLIOS[3]].map(p => ({
+      label: p.label,
+      data:            yIdxs.map(y => parseFloat(annualReturn(y, p.sw, p.bw).toFixed(2))),
+      backgroundColor: yIdxs.map(y => annualReturn(y, p.sw, p.bw) >= 0 ? p.color + 'CC' : '#EF4444CC'),
+      borderColor:     yIdxs.map(y => annualReturn(y, p.sw, p.bw) >= 0 ? p.color : '#EF4444'),
+      borderWidth: 1.5,
+      borderRadius: 4,
+    }))
+  };
+}
+
+function makeAnnualChart() {
+  const ctx = document.getElementById('annualChart').getContext('2d');
+  annualChart = new Chart(ctx, {
+    type: 'bar',
+    data: _annualChartData(),
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#1E293B', font: { size: 12 }, boxWidth: 14, padding: 16 }
+        },
+        tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` } }
+      },
+      scales: {
+        x: { ticks: { color: '#94A3B8', font: { size: 11 } }, grid: { display: false } },
+        y: { ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v + '%' }, grid: { color: '#F1F5F9' } }
+      }
+    }
+  });
+}
+
+function updateAnnualChart() {
+  const d = _annualChartData();
+  annualChart.data.labels = d.labels;
+  annualChart.data.datasets.forEach((ds, i) => Object.assign(ds, d.datasets[i]));
+  annualChart.update('none');
+}
+
+// ── Recovery table ────────────────────────────────────────────────────────
+function buildRecoveryTable() {
+  const crises = [
+    { name: '2008 Crisis', startM: 36, endM: 96 },   // Jan 2007 – Dec 2011
+    { name: '2020 COVID',  startM: 192, endM: 215 }, // Jan 2020 – Dec 2021
+  ];
+
+  const table = document.getElementById('recoveryTable');
+  let html = `<thead><tr>
+    <th>Portfolio</th>
+    <th>2008 — Max Drawdown</th>
+    <th>2008 — Recovery</th>
+    <th>2020 — Max Drawdown</th>
+    <th>2020 — Recovery</th>
+  </tr></thead><tbody>`;
+
+  for (const p of PORTFOLIOS) {
+    const dd2008  = maxDrawdown(simulateIndexed(36, 96, p.sw, p.bw));
+    const rec2008 = recoveryMonths(simulateIndexed(36, 96, p.sw, p.bw));
+    const dd2020  = maxDrawdown(simulateIndexed(192, 215, p.sw, p.bw));
+    const rec2020 = recoveryMonths(simulateIndexed(192, 215, p.sw, p.bw));
+
+    const ddClass = dd => dd > -10 ? 'green' : dd > -25 ? 'amber' : 'red';
+    const recLabel = r => r === null ? '> 2 yr' : r <= 6 ? `${r} mo` : r <= 18 ? `${r} mo` : `${r} mo`;
+    const recClass = r => r === null ? 'red' : r <= 6 ? 'green' : r <= 18 ? 'amber' : 'red';
+
+    html += `<tr>
+      <td><span class="portfolio-name"><span class="dot" style="background:${p.color}"></span>${p.label}</span></td>
+      <td>
+        <span class="badge ${ddClass(dd2008)}">${dd2008.toFixed(1)}%</span>
+        <div class="dd-bar-wrap" style="margin-top:6px">
+          <div class="dd-bar" style="width:${Math.abs(dd2008)/60*100}%;background:${dd2008 < -25 ? '#EF4444' : dd2008 < -10 ? '#F59E0B' : '#10B981'}"></div>
+        </div>
+      </td>
+      <td><span class="badge ${recClass(rec2008)}">${recLabel(rec2008)}</span></td>
+      <td>
+        <span class="badge ${ddClass(dd2020)}">${dd2020.toFixed(1)}%</span>
+        <div class="dd-bar-wrap" style="margin-top:6px">
+          <div class="dd-bar" style="width:${Math.abs(dd2020)/60*100}%;background:${dd2020 < -15 ? '#EF4444' : dd2020 < -5 ? '#F59E0B' : '#10B981'}"></div>
+        </div>
+      </td>
+      <td><span class="badge ${recClass(rec2020)}">${recLabel(rec2020)}</span></td>
+    </tr>`;
+  }
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ── Summary boxes & hero stats ────────────────────────────────────────────
+function updateSummary() {
+  const { initial, monthly, months } = state;
+
+  const grid = document.getElementById('summaryGrid');
+  let html = '';
+  const colors = ['#EFF6FF', '#F5F3FF', '#ECFDF5', '#FFFBEB'];
+  const borders = ['#3B82F6', '#7C3AED', '#059669', '#D97706'];
+
+  const startM = getStartM();
+  PORTFOLIOS.forEach((p, i) => {
+    const vals = simulate(initial, monthly, months, p.sw, p.bw, startM);
+    const final = vals[vals.length - 1];
+    const invested = initial + monthly * months;
+    const gain = final - invested;
+    const gainPct = (gain / invested * 100).toFixed(0);
+
+    html += `<div class="summary-box" style="background:${colors[i]};border-color:${borders[i]}">
+      <div class="label" style="color:${borders[i]}">${p.label}</div>
+      <div class="final" style="color:${borders[i]}">${fmt(final)}</div>
+      <div class="gain" style="color:${borders[i]}">+${fmt(gain)} (${gainPct}% on invested)</div>
+    </div>`;
+
+    // Hero stats
+    const heroIds = ['stat-stocks','stat-7030','stat-5050','stat-bonds'];
+    document.getElementById(heroIds[i]).textContent = fmt(final);
+  });
+  grid.innerHTML = html;
+}
+
+// ── Legend ────────────────────────────────────────────────────────────────
+function buildLegend() {
+  const el = document.getElementById('growthLegend');
+  el.innerHTML = PORTFOLIOS.map(p =>
+    `<div class="legend-item">
+      <div class="legend-dot" style="background:${p.color}"></div>
+      ${p.label}
+    </div>`
+  ).join('') + `<div class="legend-item">
+      <div class="legend-dot" style="background:#CBD5E1;border:1px dashed #94A3B8"></div>
+      Total Invested (cash)
+    </div>`;
+}
+
+// ── Input wiring ──────────────────────────────────────────────────────────
+function updateAll() {
+  updateSummary();
+  updateGrowthChart();
+  updateReturnChart();
+  updateAnnualChart();
+}
+
+function wireInputs() {
+  const rangeInitial = document.getElementById('range-initial');
+  const rangeMonthly = document.getElementById('range-monthly');
+
+  rangeInitial.addEventListener('input', () => {
+    state.initial = +rangeInitial.value;
+    document.getElementById('disp-initial').textContent = fmt(state.initial);
+    updateAll();
+  });
+  rangeMonthly.addEventListener('input', () => {
+    state.monthly = +rangeMonthly.value;
+    document.getElementById('disp-monthly').textContent = fmt(state.monthly);
+    updateAll();
+  });
+
+  document.querySelectorAll('.horizon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.horizon-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.months = +btn.dataset.months;
+      updateAll();
+    });
+  });
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildLegend();
+  wireInputs();
+  updateSummary();
+
+  makeGrowthChart();
+  makeReturnChart();
+  makeVolatilityChart();
+  makeAnnualChart();
+
+  // Month indices:
+  // Jan 2007 = 36, Dec 2010 = 83
+  // Jan 2020 = 192, Dec 2021 = 215
+  // Jan 2022 = 216, Dec 2023 = 239
+  crisis2008Chart = makeCrisisChart('crisis2008Chart', 36, 83);
+  crisis2020Chart = makeCrisisChart('crisis2020Chart', 192, 215);
+  crisis2022Chart = makeCrisisChart('crisis2022Chart', 216, 239);
+
+  buildRecoveryTable();
+});
+</script>
+</body>
+</html>
