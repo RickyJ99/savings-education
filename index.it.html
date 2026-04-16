@@ -144,7 +144,7 @@ input[type="number"]:focus { border-color: var(--blue); }
 .crisis-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 20px;
 }
-@media (max-width: 520px) { .crisis-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .crisis-grid { grid-template-columns: 1fr; } }
 
 .crisis-card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
 .crisis-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
@@ -189,6 +189,40 @@ footer {
   font-size: .82rem; margin-top: 48px;
 }
 footer p + p { margin-top: 6px; }
+
+/* ── Recovery table scroll wrapper ── */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 20px;
+}
+.table-scroll .recovery-table { margin-top: 0; }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .hero { padding: 36px 16px 30px; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero p  { font-size: .95rem; }
+  .stat-pill { padding: 10px 16px; }
+  .stat-pill .val { font-size: 1.5rem; }
+  .stat-pill .lab { font-size: .7rem; }
+  .container { padding: 0 14px; }
+  .section { padding: 32px 0; }
+  .card { padding: 18px 14px; }
+  .section-title { font-size: 1.2rem; }
+  .section-sub { font-size: .88rem; }
+  .chart-wrap    { height: 230px; }
+  .chart-wrap-sm { height: 185px; }
+  .inputs-grid { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .summary-box .final { font-size: 1.15rem; }
+  .dd-bar-wrap { display: none; }
+  .recovery-table { font-size: .78rem; }
+  .recovery-table th,
+  .recovery-table td { padding: 8px 8px; }
+  .badge { font-size: .7rem; padding: 2px 7px; }
+  footer { padding: 24px 16px; font-size: .75rem; }
+}
 </style>
 </head>
 
@@ -345,7 +379,9 @@ footer p + p { margin-top: 6px; }
     <div class="card" style="margin-top:20px;">
       <h3 style="font-size:1rem;font-weight:700;margin-bottom:4px;">Tempo di recupero e drawdown massimo</h3>
       <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">Quanto tempo ci ha voluto per tornare al picco pre-crisi — e quanto è stato profondo il calo.</p>
-      <table class="recovery-table" id="recoveryTable"></table>
+      <div class="table-scroll">
+        <table class="recovery-table" id="recoveryTable"></table>
+      </div>
 
       <div class="insight red" style="margin-top:20px;">
         <strong>Il numero più importante non è il drawdown — è il tempo di recupero.</strong>
@@ -404,6 +440,11 @@ footer p + p { margin-top: 6px; }
 ════════════════════════════════════════════════════════════════════════════ -->
 <script>
 'use strict';
+
+// ── Responsive helpers ────────────────────────────────────────────────────
+const IS_MOBILE = window.innerWidth < 640;
+const TICK_SZ   = IS_MOBILE ? 9  : 11;
+const X_TICKS   = IS_MOBILE ? 5  : 10;
 
 // ── Historical monthly return data (%/month) ──────────────────────────────
 // MSCI World (USD total return, approximate) — Jan 2004 to Dec 2023
@@ -658,12 +699,12 @@ function makeGrowthChart() {
       },
       scales: {
         x: {
-          ticks: { maxTicksLimit: 10, color: '#94A3B8', font: { size: 11 } },
+          ticks: { maxTicksLimit: X_TICKS, color: '#94A3B8', font: { size: TICK_SZ } },
           grid: { color: '#F1F5F9' },
         },
         y: {
           ticks: {
-            color: '#94A3B8', font: { size: 11 },
+            color: '#94A3B8', font: { size: TICK_SZ },
             callback: v => '€' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v),
           },
           grid: { color: '#F1F5F9' },
@@ -718,9 +759,9 @@ function makeReturnChart() {
         tooltip: { callbacks: { label: c => `  Media: ${c.parsed.y.toFixed(2)}% / anno` } }
       },
       scales: {
-        x: { ticks: { color: '#94A3B8', font: { size: 11 } }, grid: { display: false } },
+        x: { ticks: { color: '#94A3B8', font: { size: TICK_SZ } }, grid: { display: false } },
         y: {
-          ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v + '%' },
+          ticks: { color: '#94A3B8', font: { size: TICK_SZ }, callback: v => v + '%' },
           grid: { color: '#F1F5F9' },
         }
       }
@@ -779,8 +820,8 @@ function makeVolatilityChart() {
         tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y} mesi` } }
       },
       scales: {
-        x: { ticks: { color: '#94A3B8', font: { size: 10 }, maxTicksLimit: 8 }, grid: { display: false } },
-        y: { ticks: { color: '#94A3B8', font: { size: 11 }, stepSize: 5 }, grid: { color: '#F1F5F9' } }
+        x: { ticks: { color: '#94A3B8', font: { size: TICK_SZ }, maxTicksLimit: IS_MOBILE ? 5 : 8 }, grid: { display: false } },
+        y: { ticks: { color: '#94A3B8', font: { size: TICK_SZ }, stepSize: 5 }, grid: { color: '#F1F5F9' } }
       }
     }
   });
@@ -828,9 +869,9 @@ function makeCrisisChart(canvasId, startM, endM) {
         }
       },
       scales: {
-        x: { ticks: { maxTicksLimit: 6, color: '#94A3B8', font: { size: 10 } }, grid: { color: '#F1F5F9' } },
+        x: { ticks: { maxTicksLimit: IS_MOBILE ? 4 : 6, color: '#94A3B8', font: { size: TICK_SZ } }, grid: { color: '#F1F5F9' } },
         y: {
-          ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v.toFixed(0) },
+          ticks: { color: '#94A3B8', font: { size: TICK_SZ }, callback: v => v.toFixed(0) },
           grid: { color: '#F1F5F9' },
         }
       }
@@ -873,8 +914,16 @@ function makeAnnualChart() {
         tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` } }
       },
       scales: {
-        x: { ticks: { color: '#94A3B8', font: { size: 11 } }, grid: { display: false } },
-        y: { ticks: { color: '#94A3B8', font: { size: 11 }, callback: v => v + '%' }, grid: { color: '#F1F5F9' } }
+        x: {
+          ticks: {
+            color: '#94A3B8', font: { size: TICK_SZ },
+            maxRotation: IS_MOBILE ? 45 : 0,
+            minRotation: IS_MOBILE ? 45 : 0,
+            maxTicksLimit: IS_MOBILE ? 8 : 20,
+          },
+          grid: { display: false },
+        },
+        y: { ticks: { color: '#94A3B8', font: { size: TICK_SZ }, callback: v => v + '%' }, grid: { color: '#F1F5F9' } }
       }
     }
   });
