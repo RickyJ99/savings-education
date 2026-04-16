@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Investment Simulator — Understanding Long-Term Savings</title>
+<title>Simulatore di Investimenti — Capire il Risparmio a Lungo Termine</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -196,33 +196,33 @@ footer p + p { margin-top: 6px; }
 
 <!-- ── LANGUAGE BAR ──────────────────────────────────────────────────────── -->
 <div style="background:#0F172A;border-bottom:1px solid rgba(255,255,255,0.08);padding:8px 24px;display:flex;justify-content:flex-end;align-items:center;gap:6px;">
-  <span style="font-size:.75rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-right:4px;">Language</span>
-  <a href="index.html" style="padding:4px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;background:#3B82F6;color:white;letter-spacing:.03em;">EN</a>
-  <a href="index.it.html" style="padding:4px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;background:rgba(255,255,255,0.08);color:#94A3B8;letter-spacing:.03em;">IT</a>
+  <span style="font-size:.75rem;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-right:4px;">Lingua</span>
+  <a href="index.html" style="padding:4px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;background:rgba(255,255,255,0.08);color:#94A3B8;letter-spacing:.03em;">EN</a>
+  <a href="index.it.html" style="padding:4px 14px;border-radius:6px;font-size:.8rem;font-weight:700;text-decoration:none;background:#3B82F6;color:white;letter-spacing:.03em;">IT</a>
 </div>
 
 <!-- ── HERO ──────────────────────────────────────────────────────────────── -->
 <header class="hero">
   <div class="container">
-    <h1>What does time in the market actually look like?</h1>
-    <p>An honest, data-driven simulator built on 20 years of real market returns — with the crashes included.</p>
+    <h1>Come appare davvero il tempo nel mercato?</h1>
+    <p>Un simulatore onesto e basato sui dati, costruito su 20 anni di rendimenti reali di mercato — crolli inclusi.</p>
 
     <div class="key-stats" id="heroStats">
       <div class="stat-pill blue">
         <div class="val" id="stat-stocks">—</div>
-        <div class="lab">100% Stocks (MSCI World)</div>
+        <div class="lab">100% Azioni (MSCI World)</div>
       </div>
       <div class="stat-pill purple">
         <div class="val" id="stat-7030">—</div>
-        <div class="lab">70 / 30 Portfolio</div>
+        <div class="lab">Portafoglio 70 / 30</div>
       </div>
       <div class="stat-pill green">
         <div class="val" id="stat-5050">—</div>
-        <div class="lab">50 / 50 Portfolio</div>
+        <div class="lab">Portafoglio 50 / 50</div>
       </div>
       <div class="stat-pill amber">
         <div class="val" id="stat-bonds">—</div>
-        <div class="lab">100% Bonds (G10 Gov)</div>
+        <div class="lab">100% Obbligazioni (G10 Gov)</div>
       </div>
     </div>
   </div>
@@ -231,32 +231,32 @@ footer p + p { margin-top: 6px; }
 <!-- ── INPUTS ────────────────────────────────────────────────────────────── -->
 <section class="section">
   <div class="container">
-    <div class="section-title">Your savings scenario</div>
-    <div class="section-sub">Adjust the values — every chart updates instantly.</div>
+    <div class="section-title">Il tuo scenario di risparmio</div>
+    <div class="section-sub">Regola i valori — ogni grafico si aggiorna istantaneamente.</div>
 
     <div class="card">
       <div class="inputs-grid">
         <div class="input-group">
-          <label>Initial Capital</label>
+          <label>Capitale Iniziale</label>
           <div class="input-row">
-            <span id="disp-initial">€10,000</span>
+            <span id="disp-initial">€10.000</span>
             <input type="range" id="range-initial" min="0" max="200000" step="1000" value="10000">
           </div>
         </div>
         <div class="input-group">
-          <label>Monthly Savings</label>
+          <label>Risparmio Mensile</label>
           <div class="input-row">
             <span id="disp-monthly">€300</span>
             <input type="range" id="range-monthly" min="0" max="5000" step="50" value="300">
           </div>
         </div>
         <div class="input-group">
-          <label>Investment Horizon</label>
+          <label>Orizzonte di Investimento</label>
           <div class="horizon-btns">
-            <button class="horizon-btn" data-months="60">5 yrs</button>
-            <button class="horizon-btn" data-months="120">10 yrs</button>
-            <button class="horizon-btn" data-months="180">15 yrs</button>
-            <button class="horizon-btn active" data-months="240">20 yrs</button>
+            <button class="horizon-btn" data-months="60">5 anni</button>
+            <button class="horizon-btn" data-months="120">10 anni</button>
+            <button class="horizon-btn" data-months="180">15 anni</button>
+            <button class="horizon-btn active" data-months="240">20 anni</button>
           </div>
         </div>
       </div>
@@ -270,8 +270,8 @@ footer p + p { margin-top: 6px; }
 <!-- ── PORTFOLIO GROWTH ──────────────────────────────────────────────────── -->
 <section class="section" style="padding-top:0">
   <div class="container">
-    <div class="section-title">Portfolio growth — month by month</div>
-    <div class="section-sub">Historical monthly returns from January 2004 (MSCI World + G10 Government Bonds). All crashes included.</div>
+    <div class="section-title">Crescita del portafoglio — mese per mese</div>
+    <div class="section-sub">Rendimenti mensili storici da gennaio 2004 (MSCI World + Obbligazioni Governative G10). Tutti i crolli inclusi.</div>
 
     <div class="card">
       <div class="legend" id="growthLegend"></div>
@@ -279,9 +279,9 @@ footer p + p { margin-top: 6px; }
         <canvas id="growthChart"></canvas>
       </div>
       <div class="insight">
-        <strong>What you're seeing:</strong> Every portfolio includes your monthly contributions. The grey region at the bottom
-        represents the total cash you put in — everything above it is market return. The volatility is real;
-        the growth is also real.
+        <strong>Cosa stai vedendo:</strong> Ogni portafoglio include i tuoi contributi mensili. La zona grigia in basso
+        rappresenta il totale del denaro versato — tutto ciò che è sopra è rendimento di mercato. La volatilità è reale;
+        la crescita è anch'essa reale.
       </div>
     </div>
   </div>
@@ -290,18 +290,18 @@ footer p + p { margin-top: 6px; }
 <!-- ── RETURN & VOLATILITY ───────────────────────────────────────────────── -->
 <section class="section" style="padding-top:0">
   <div class="container">
-    <div class="section-title">Return vs. volatility</div>
-    <div class="section-sub">The uncomfortable truth: higher average return always comes with bigger monthly swings.</div>
+    <div class="section-title">Rendimento vs. volatilità</div>
+    <div class="section-sub">La verità scomoda: un rendimento medio più alto comporta sempre oscillazioni mensili più ampie.</div>
 
     <div class="two-col">
       <div class="card">
-        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Average Annual Return (2004–2023)</h3>
+        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Rendimento Annuo Medio (2004–2023)</h3>
         <div class="chart-wrap-sm">
           <canvas id="returnChart"></canvas>
         </div>
       </div>
       <div class="card">
-        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Monthly Return Distribution (all 240 months)</h3>
+        <h3 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:16px;">Distribuzione dei Rendimenti Mensili (tutti i 240 mesi)</h3>
         <div class="chart-wrap-sm">
           <canvas id="volatilityChart"></canvas>
         </div>
@@ -309,9 +309,9 @@ footer p + p { margin-top: 6px; }
     </div>
 
     <div class="insight" style="margin-top:20px;">
-      <strong>The key insight:</strong> Stocks average roughly <strong>10–11% annually</strong> over this 20-year period —
-      but your portfolio can drop <strong>−13% in a single month</strong> (March 2020) or <strong>−19% in a month</strong>
-      (October 2008). The blended portfolios reduce the worst months without giving up most of the long-term gain.
+      <strong>Il messaggio chiave:</strong> Le azioni hanno reso in media circa <strong>10–11% annuo</strong> in questo periodo di 20 anni —
+      ma il tuo portafoglio può perdere <strong>−13% in un solo mese</strong> (marzo 2020) o <strong>−19% in un mese</strong>
+      (ottobre 2008). I portafogli bilanciati riducono i mesi peggiori senza rinunciare alla maggior parte del guadagno a lungo termine.
     </div>
   </div>
 </section>
@@ -319,22 +319,22 @@ footer p + p { margin-top: 6px; }
 <!-- ── RISK & RECOVERY ───────────────────────────────────────────────────── -->
 <section class="section" style="padding-top:0">
   <div class="container">
-    <div class="section-title">Risk in action — what actually happened</div>
-    <div class="section-sub">Not hypothetical scenarios. These are the exact monthly returns your portfolio would have experienced during the two biggest crises of the past 20 years.</div>
+    <div class="section-title">Il rischio in azione — cosa è accaduto davvero</div>
+    <div class="section-sub">Non scenari ipotetici. Questi sono i rendimenti mensili esatti che il tuo portafoglio avrebbe vissuto durante le due crisi più grandi degli ultimi 20 anni.</div>
 
     <div class="crisis-grid">
       <!-- 2008 -->
       <div class="crisis-card">
-        <h3>🔴 2008 Financial Crisis</h3>
-        <div class="sub">January 2007 — December 2010 &nbsp;|&nbsp; Portfolio indexed to 100 at start</div>
+        <h3>🔴 Crisi Finanziaria 2008</h3>
+        <div class="sub">Gennaio 2007 — Dicembre 2010 &nbsp;|&nbsp; Portafoglio indicizzato a 100 all'inizio</div>
         <div class="chart-wrap-sm">
           <canvas id="crisis2008Chart"></canvas>
         </div>
       </div>
       <!-- 2020 -->
       <div class="crisis-card">
-        <h3>🟡 2020 COVID Crash</h3>
-        <div class="sub">January 2020 — December 2021 &nbsp;|&nbsp; Portfolio indexed to 100 at start</div>
+        <h3>🟡 Crollo COVID 2020</h3>
+        <div class="sub">Gennaio 2020 — Dicembre 2021 &nbsp;|&nbsp; Portafoglio indicizzato a 100 all'inizio</div>
         <div class="chart-wrap-sm">
           <canvas id="crisis2020Chart"></canvas>
         </div>
@@ -343,14 +343,14 @@ footer p + p { margin-top: 6px; }
 
     <!-- Recovery table -->
     <div class="card" style="margin-top:20px;">
-      <h3 style="font-size:1rem;font-weight:700;margin-bottom:4px;">Recovery time & maximum drawdown</h3>
-      <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">How long it took to get back to the pre-crisis peak — and how deep the hole was.</p>
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:4px;">Tempo di recupero e drawdown massimo</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">Quanto tempo ci ha voluto per tornare al picco pre-crisi — e quanto è stato profondo il calo.</p>
       <table class="recovery-table" id="recoveryTable"></table>
 
       <div class="insight red" style="margin-top:20px;">
-        <strong>The most important number isn't the drawdown — it's the recovery time.</strong>
-        A 100% stock portfolio crashes harder, but history shows it also recovers to new highs.
-        The danger is not the crash: it's selling during the crash and locking in the loss.
+        <strong>Il numero più importante non è il drawdown — è il tempo di recupero.</strong>
+        Un portafoglio al 100% azionario crolla più duramente, ma la storia dimostra che recupera anche verso nuovi massimi.
+        Il pericolo non è il crollo: è vendere durante il crollo e cristallizzare la perdita.
       </div>
     </div>
   </div>
@@ -359,17 +359,17 @@ footer p + p { margin-top: 6px; }
 <!-- ── 2022 BOND SHOCK ───────────────────────────────────────────────────── -->
 <section class="section" style="padding-top:0">
   <div class="container">
-    <div class="section-title">Bonus: when bonds fail — 2022</div>
-    <div class="section-sub">Most people think bonds are always "safe." 2022 proved otherwise.</div>
+    <div class="section-title">Bonus: quando le obbligazioni falliscono — 2022</div>
+    <div class="section-sub">La maggior parte delle persone pensa che le obbligazioni siano sempre "sicure." Il 2022 ha dimostrato il contrario.</div>
     <div class="card">
       <div class="chart-wrap-sm">
         <canvas id="crisis2022Chart"></canvas>
       </div>
       <div class="insight amber">
-        <strong>2022 rate shock:</strong> As central banks raised interest rates at the fastest pace in 40 years,
-        global government bonds lost <strong>~16%</strong> in a single year — their worst performance since the 1940s.
-        A diversified portfolio (70/30 or 50/50) cushioned the blow because stocks recovered faster than bonds in 2023.
-        <em>No asset class is permanently safe.</em>
+        <strong>Lo shock dei tassi 2022:</strong> Mentre le banche centrali alzavano i tassi di interesse al ritmo più rapido degli ultimi 40 anni,
+        le obbligazioni governative globali hanno perso circa <strong>~16%</strong> in un solo anno — la loro peggiore performance dagli anni '40.
+        Un portafoglio diversificato (70/30 o 50/50) ha attutito il colpo perché le azioni si sono riprese più velocemente delle obbligazioni nel 2023.
+        <em>Nessuna asset class è permanentemente sicura.</em>
       </div>
     </div>
   </div>
@@ -378,16 +378,16 @@ footer p + p { margin-top: 6px; }
 <!-- ── ANNUAL RETURNS ────────────────────────────────────────────────────── -->
 <section class="section" style="padding-top:0">
   <div class="container">
-    <div class="section-title">Year by year — what you actually lived through</div>
-    <div class="section-sub">Every bar is a calendar year. The wide swings for stocks are what make people sell at the wrong moment.</div>
+    <div class="section-title">Anno per anno — quello che hai vissuto davvero</div>
+    <div class="section-sub">Ogni barra è un anno solare. Le ampie oscillazioni delle azioni sono ciò che spinge le persone a vendere nel momento sbagliato.</div>
     <div class="card">
       <div style="position:relative;height:300px;">
         <canvas id="annualChart"></canvas>
       </div>
       <div class="insight green">
-        <strong>The message in the data:</strong> In 14 of the last 20 years, stocks outperformed bonds.
-        The 6 down years for stocks were painful — but staying invested through all of them produced
-        the returns you see in the growth chart above.
+        <strong>Il messaggio nei dati:</strong> In 14 degli ultimi 20 anni, le azioni hanno sovraperformato le obbligazioni.
+        I 6 anni negativi per le azioni sono stati dolorosi — ma restare investiti attraverso tutti loro ha prodotto
+        i rendimenti che vedi nel grafico di crescita sopra.
       </div>
     </div>
   </div>
@@ -395,8 +395,8 @@ footer p + p { margin-top: 6px; }
 
 <!-- ── FOOTER ────────────────────────────────────────────────────────────── -->
 <footer>
-  <p><strong>Data sources (approximate):</strong> MSCI World Index monthly returns (USD, gross) · Bloomberg Global G10 Government Bond Index · Period: January 2004 – December 2023.</p>
-  <p>This tool is for educational purposes only and does not constitute financial advice. Past performance is not indicative of future results.</p>
+  <p><strong>Fonti dei dati (approssimative):</strong> Rendimenti mensili MSCI World Index (USD, lordi) · Bloomberg Global G10 Government Bond Index · Periodo: gennaio 2004 – dicembre 2023.</p>
+  <p>Questo strumento ha finalità esclusivamente educative e non costituisce consulenza finanziaria. Le performance passate non sono indicative dei risultati futuri.</p>
 </footer>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
@@ -416,13 +416,13 @@ const STOCKS = [
    4.5,  1.5,  2.5,  2.5, -5.5, -1.5,  1.0,  2.0,  2.5,  3.0,  2.0,  3.0,
   // 2007
    1.8, -0.5,  1.5,  3.5,  2.5, -2.0,  0.5, -1.5,  3.5,  3.5, -4.5,  0.5,
-  // 2008  ← Financial Crisis
+  // 2008  ← Crisi Finanziaria
   -6.0, -0.5, -0.8,  4.5,  1.5, -7.0, -0.5, -1.0, -9.8,-19.0, -7.5,  3.0,
-  // 2009  ← Recovery
+  // 2009  ← Ripresa
   -7.5,-10.0,  7.5,  9.5,  8.0,  0.5,  7.5,  3.5,  4.0, -2.0,  3.5,  2.0,
   // 2010
   -3.5,  1.5,  5.5,  2.8, -9.0, -2.5,  7.0, -2.0,  8.0,  2.5, -2.5,  5.0,
-  // 2011  ← Euro crisis
+  // 2011  ← Crisi dell'euro
    2.5,  3.5,  0.5,  2.8, -2.0, -2.5, -2.5, -7.5, -9.0,  9.0, -2.5,  1.0,
   // 2012
    5.0,  4.5,  1.0, -1.5, -7.5,  4.5,  1.5,  2.5,  2.8, -1.0,  1.5,  3.0,
@@ -440,11 +440,11 @@ const STOCKS = [
    5.5, -4.5, -2.5,  1.5,  0.5, -1.0,  3.0,  1.5,  0.5, -7.5, -2.0, -7.0,
   // 2019
    7.5,  3.0,  2.0,  3.5, -6.0,  6.5,  1.5, -2.5,  2.5,  2.5,  3.0,  2.5,
-  // 2020  ← COVID crash
+  // 2020  ← Crollo COVID
   -0.6, -8.0,-13.5, 10.8,  4.8,  2.5,  2.0,  6.2, -3.5, -3.0, 12.5,  4.5,
   // 2021
   -1.0,  2.5,  3.0,  4.5,  1.5,  1.5,  1.5,  2.5, -4.0,  5.0, -2.5,  4.5,
-  // 2022  ← Rate shock
+  // 2022  ← Shock dei tassi
   -5.3, -2.7,  2.7, -8.0, -2.6, -8.7,  8.5, -4.2, -9.3,  7.6,  7.0, -4.5,
   // 2023
    7.0, -2.5,  2.5,  1.5, -1.0,  6.0,  3.5, -2.5, -4.5, -3.0,  9.5,  4.5,
@@ -460,13 +460,13 @@ const BONDS = [
   -0.5,  0.5, -0.5, -1.5, -0.5,  1.0,  1.5,  1.0,  0.5,  0.5,  0.5,  0.8,
   // 2007
    0.5,  0.5,  0.5, -0.5, -0.5,  0.5,  1.0,  2.5,  2.0,  1.0,  1.5,  0.5,
-  // 2008  ← Flight to safety
+  // 2008  ← Fuga verso la sicurezza
    2.0,  1.0,  1.5, -1.0, -1.0,  0.5,  1.0,  1.5,  1.0,  2.5,  1.0, -0.5,
   // 2009
    0.5,  0.0, -1.5, -1.5, -1.0, -0.5, -0.5, -0.5,  0.5,  0.5,  0.5,  1.0,
   // 2010
   -1.0,  1.0, -0.5,  1.0,  2.5,  1.0,  1.5,  1.5,  1.0, -0.5, -2.5, -1.0,
-  // 2011  ← Euro crisis flight to safety
+  // 2011  ← Crisi euro, fuga verso la sicurezza
    0.5,  0.5,  0.0,  1.0,  1.5,  1.0,  1.5,  3.0,  2.0, -1.5,  0.5, -1.5,
   // 2012
    1.0,  0.5,  0.0,  1.5,  1.5,  0.5,  1.5,  0.0,  0.5,  0.0,  0.5, -1.5,
@@ -484,11 +484,11 @@ const BONDS = [
    0.0, -1.0,  0.5,  0.5, -0.5,  0.5,  0.0,  1.0, -1.0, -1.0,  0.5,  0.5,
   // 2019
    1.5,  0.5,  2.0,  0.5,  1.5,  1.5,  0.5,  2.0, -1.0, -1.0, -1.0, -0.5,
-  // 2020  ← COVID (flight to safety)
+  // 2020  ← COVID (fuga verso la sicurezza)
    2.0,  2.5, -2.0,  0.5,  1.0,  0.5,  1.5,  0.5, -0.5, -1.0, -0.5,  0.5,
   // 2021
   -1.0, -2.0, -2.0,  0.5,  0.5,  1.5,  2.0,  0.0, -1.5, -1.5,  0.0,  2.0,
-  // 2022  ← Rate shock (worst bond year since 1940s)
+  // 2022  ← Shock dei tassi (anno peggiore per le obbligazioni dagli anni '40)
   -2.5, -1.5, -3.5, -3.5, -0.5, -2.5,  2.5, -2.0, -4.5,  1.5,  4.0, -3.5,
   // 2023
    3.0, -2.0,  2.0,  0.5, -1.0, -1.5, -0.5, -1.5, -3.5, -1.5,  4.5,  4.5,
@@ -496,10 +496,10 @@ const BONDS = [
 
 // ── Portfolio definitions ─────────────────────────────────────────────────
 const PORTFOLIOS = [
-  { id: 'stocks', label: '100% Stocks',           color: '#3B82F6', sw: 1.0, bw: 0.0 },
-  { id: 'mix7030', label: '70 / 30',              color: '#7C3AED', sw: 0.7, bw: 0.3 },
-  { id: 'mix5050', label: '50 / 50',              color: '#059669', sw: 0.5, bw: 0.5 },
-  { id: 'bonds',  label: '100% Bonds',            color: '#D97706', sw: 0.0, bw: 1.0 },
+  { id: 'stocks',  label: '100% Azioni',       color: '#3B82F6', sw: 1.0, bw: 0.0 },
+  { id: 'mix7030', label: '70 / 30',            color: '#7C3AED', sw: 0.7, bw: 0.3 },
+  { id: 'mix5050', label: '50 / 50',            color: '#059669', sw: 0.5, bw: 0.5 },
+  { id: 'bonds',   label: '100% Obbligazioni',  color: '#D97706', sw: 0.0, bw: 1.0 },
 ];
 
 // ── State ─────────────────────────────────────────────────────────────────
@@ -510,11 +510,11 @@ let growthChart, returnChart, volatilityChart, annualChart;
 let crisis2008Chart, crisis2020Chart, crisis2022Chart;
 
 // ── Utilities ─────────────────────────────────────────────────────────────
-const fmt = v => '€' + Math.round(v).toLocaleString('de-DE');
+const fmt = v => '€' + Math.round(v).toLocaleString('it-IT');
 const fmtPct = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
 
 function monthLabel(absMonth) {
-  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MO = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
   const y  = 2004 + Math.floor(absMonth / 12);
   const m  = absMonth % 12;
   return `${MO[m]} ${y}`;
@@ -527,8 +527,6 @@ function genLabels(startM, count) {
 }
 
 // ── Simulation ────────────────────────────────────────────────────────────
-// startM: index into STOCKS/BONDS where the window begins (0 = Jan 2004)
-// Horizon always ends at Dec 2023 (month 239), so startM = 240 - months
 function getStartM() { return 240 - state.months; }
 
 function simulate(initial, monthly, months, sw, bw, startM = 0) {
@@ -578,12 +576,10 @@ function maxDrawdown(vals) {
 // Recovery time in months: from trough back to previous peak
 function recoveryMonths(vals) {
   let peak = vals[0], peakI = 0, troughI = 0, trough = vals[0];
-  // find trough
   for (let i = 1; i < vals.length; i++) {
     if (vals[i] > peak) { peak = vals[i]; peakI = i; }
     if (vals[i] < trough) { trough = vals[i]; troughI = i; }
   }
-  // real trough is after the biggest peak
   let runPeak = vals[0];
   let realPeakI = 0, realTroughI = 0, realTrough = vals[0];
   for (let i = 1; i < vals.length; i++) {
@@ -596,11 +592,10 @@ function recoveryMonths(vals) {
     }
   }
   const peakVal = vals[realPeakI];
-  // find first recovery after trough
   for (let i = realTroughI; i < vals.length; i++) {
     if (vals[i] >= peakVal) return i - realTroughI;
   }
-  return null; // not yet recovered in data
+  return null; // non ancora recuperato nei dati
 }
 
 // ── Monthly contribution "invested" values ────────────────────────────────
@@ -631,7 +626,7 @@ function makeGrowthChart() {
 
   // Contributions area
   datasets.push({
-    label: 'Total Invested',
+    label: 'Totale Investito',
     data: contribs,
     borderColor: '#CBD5E1',
     borderWidth: 1.5,
@@ -689,8 +684,7 @@ function updateGrowthChart() {
 }
 
 function _avgAnnualForPeriod(sw, bw) {
-  // Use only the years inside the selected horizon (always ending Dec 2023 = year index 19)
-  const startY = Math.floor(getStartM() / 12);   // first year index (0-based) in window
+  const startY = Math.floor(getStartM() / 12);
   const numY   = Math.ceil(state.months / 12);
   let total = 0;
   for (let y = startY; y < startY + numY && y < 20; y++) total += annualReturn(y, sw, bw);
@@ -717,7 +711,7 @@ function makeReturnChart() {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: c => `  Avg: ${c.parsed.y.toFixed(2)}% / year` } }
+        tooltip: { callbacks: { label: c => `  Media: ${c.parsed.y.toFixed(2)}% / anno` } }
       },
       scales: {
         x: { ticks: { color: '#94A3B8', font: { size: 11 } }, grid: { display: false } },
@@ -739,13 +733,11 @@ function updateReturnChart() {
 function makeVolatilityChart() {
   const ctx = document.getElementById('volatilityChart').getContext('2d');
 
-  // Bin monthly returns into histogram buckets
   function histogram(sw, bw) {
     const returns = [];
     for (let m = 0; m < 240; m++) {
       returns.push((sw * STOCKS[m] + bw * BONDS[m]));
     }
-    // Buckets: -20 to +15 by 2.5
     const buckets = [];
     for (let b = -20; b < 15; b += 2.5) buckets.push(b);
     const counts = new Array(buckets.length).fill(0);
@@ -780,7 +772,7 @@ function makeVolatilityChart() {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y} months` } }
+        tooltip: { callbacks: { label: c => `  ${c.dataset.label}: ${c.parsed.y} mesi` } }
       },
       scales: {
         x: { ticks: { color: '#94A3B8', font: { size: 10 }, maxTicksLimit: 8 }, grid: { display: false } },
@@ -806,7 +798,7 @@ function makeCrisisChart(canvasId, startM, endM) {
 
   // Baseline at 100
   datasets.push({
-    label: 'Starting Value',
+    label: 'Valore Iniziale',
     data: new Array(endM - startM + 1).fill(100),
     borderColor: '#CBD5E1',
     borderWidth: 1,
@@ -825,7 +817,7 @@ function makeCrisisChart(canvasId, startM, endM) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: c => c.dataset.label !== 'Starting Value'
+            label: c => c.dataset.label !== 'Valore Iniziale'
               ? `  ${c.dataset.label}: ${c.parsed.y.toFixed(1)}`
               : null,
           }
@@ -893,18 +885,13 @@ function updateAnnualChart() {
 
 // ── Recovery table ────────────────────────────────────────────────────────
 function buildRecoveryTable() {
-  const crises = [
-    { name: '2008 Crisis', startM: 36, endM: 96 },   // Jan 2007 – Dec 2011
-    { name: '2020 COVID',  startM: 192, endM: 215 }, // Jan 2020 – Dec 2021
-  ];
-
   const table = document.getElementById('recoveryTable');
   let html = `<thead><tr>
-    <th>Portfolio</th>
-    <th>2008 — Max Drawdown</th>
-    <th>2008 — Recovery</th>
-    <th>2020 — Max Drawdown</th>
-    <th>2020 — Recovery</th>
+    <th>Portafoglio</th>
+    <th>2008 — Drawdown Massimo</th>
+    <th>2008 — Recupero</th>
+    <th>2020 — Drawdown Massimo</th>
+    <th>2020 — Recupero</th>
   </tr></thead><tbody>`;
 
   for (const p of PORTFOLIOS) {
@@ -914,7 +901,7 @@ function buildRecoveryTable() {
     const rec2020 = recoveryMonths(simulateIndexed(192, 215, p.sw, p.bw));
 
     const ddClass = dd => dd > -10 ? 'green' : dd > -25 ? 'amber' : 'red';
-    const recLabel = r => r === null ? '> 2 yr' : r <= 6 ? `${r} mo` : r <= 18 ? `${r} mo` : `${r} mo`;
+    const recLabel = r => r === null ? '> 2 anni' : r <= 6 ? `${r} mesi` : r <= 18 ? `${r} mesi` : `${r} mesi`;
     const recClass = r => r === null ? 'red' : r <= 6 ? 'green' : r <= 18 ? 'amber' : 'red';
 
     html += `<tr>
@@ -959,7 +946,7 @@ function updateSummary() {
     html += `<div class="summary-box" style="background:${colors[i]};border-color:${borders[i]}">
       <div class="label" style="color:${borders[i]}">${p.label}</div>
       <div class="final" style="color:${borders[i]}">${fmt(final)}</div>
-      <div class="gain" style="color:${borders[i]}">+${fmt(gain)} (${gainPct}% on invested)</div>
+      <div class="gain" style="color:${borders[i]}">+${fmt(gain)} (${gainPct}% sull'investito)</div>
     </div>`;
 
     // Hero stats
@@ -979,7 +966,7 @@ function buildLegend() {
     </div>`
   ).join('') + `<div class="legend-item">
       <div class="legend-dot" style="background:#CBD5E1;border:1px dashed #94A3B8"></div>
-      Total Invested (cash)
+      Totale Investito (contante)
     </div>`;
 }
 
@@ -1027,10 +1014,6 @@ document.addEventListener('DOMContentLoaded', () => {
   makeVolatilityChart();
   makeAnnualChart();
 
-  // Month indices:
-  // Jan 2007 = 36, Dec 2010 = 83
-  // Jan 2020 = 192, Dec 2021 = 215
-  // Jan 2022 = 216, Dec 2023 = 239
   crisis2008Chart = makeCrisisChart('crisis2008Chart', 36, 83);
   crisis2020Chart = makeCrisisChart('crisis2020Chart', 192, 215);
   crisis2022Chart = makeCrisisChart('crisis2022Chart', 216, 239);
